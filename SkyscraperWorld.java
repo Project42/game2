@@ -1,50 +1,72 @@
 import greenfoot.*;
 import java.io.IOException;
+import java.awt.Color;
 
 public class SkyscraperWorld extends World {
-    private final int WINNING_LEVEL = 7;
+    private final int WINNING_LEVEL = 6;
     private boolean addScore;
-    public Counter scoreCounter;
-    private Player player;
+    private boolean isLoaded = true;
+    private boolean lostLife = false;
+    private boolean doTime = false;
+    public SkyscraperCounter scoreCounter;
+    public SkyscraperTimeCounter time;
+    private SkyscraperPlayer player;
     private int levelCompletePoints;
-    private int timeCount = 0;
-    private int currentLevel;
-    private Ground[] Ground;
-    private MovingBrickRight[] MovingBricksRight;
-    private MovingBrickLeft[] MovingBricksLeft;
-    private MovingBrickUp[] MovingBricksUp;
-    private Brick[] Bricks;
-    private Coin[] Coins;
-    private MovingWater movingWater;
+    private int currentLevel;   
+    private int timeActs = 0;
+    private SkyscraperGround[] Ground;
+    private SkyscraperMovingBrickRight[] MovingBricksRight;
+    private SkyscraperMovingBrickLeft[] MovingBricksLeft;
+    private SkyscraperMovingBrickUp[] MovingBricksUp;
+    private SkyscraperBrick[] Bricks;
+    private SkyscraperCoin[] Coins;
+    private SkyscraperLife[] lifes;
+    private SkyscraperMovingWater movingWater;
+    private int countLifes = 3;
+    public SkyscraperLifesText text;
 
-    //GreenfootSound backgroundMusic = new GreenfootSound("zeerstoer.mp3");
+    GreenfootSound backgroundMusic = new GreenfootSound("Escape.mp3");
 
     public SkyscraperWorld()  {
         super(80, 80, 10);
         currentLevel = 1;
         
-        player = new Player();
+        player = new SkyscraperPlayer();
         
         levelCompletePoints = loadLevel(currentLevel);
-        //backgroundMusic.playLoop();
+        backgroundMusic.playLoop();
         
-        setPaintOrder(GameOverScreen.class, /*Overlay.class,*/ Counter.class, MenuBar.class, MovingWater.class, Player.class, Coin.class, Surface.class);
+        setPaintOrder(SkyscraperTimeCounter.class, SkyscraperCounter.class, SkyscraperLife.class, SkyscraperLifesText.class, SkyscraperMenuBar.class, SkyscraperMovingWater.class, SkyscraperPlayer.class, SkyscraperCoin.class, SkyscraperSurface.class);
         
         
         /**General stuff**/
-        addObject(movingWater = new MovingWater(), 40, 71);
+        addObject(movingWater = new SkyscraperMovingWater(), 40, 71);
         
-        addObject(new MenuBar(), 39, 75);
+        addObject(new SkyscraperMenuBar(), 39, 75);
 
-        scoreCounter = new Counter("Score: ");
+        scoreCounter = new SkyscraperCounter("Score: ");
         addObject(scoreCounter, 6, 74);
+        
+        time = new SkyscraperTimeCounter("Time: ");
+        addObject(time, 6, 77);
+        
+        lifes = new SkyscraperLife[3];
+        for (int i = 0; i < lifes.length; i++)
+            {
+                lifes[i] = new SkyscraperLife();
+            }
+        addObject(lifes[0] = new SkyscraperLife(), 65, 74);
+        addObject(lifes[1], 69, 74);
+        addObject(lifes[2], 73, 74);
+        
+        text = new SkyscraperLifesText("Lifes: ");
+        addObject(text, 62, 75);
     }
     
     public void act(){
-
         
         // Check for death, level completion and game completion:
-        
+
         if((currentLevel == 1)&&(addScore == false)&&((player.getY() <= 11)&&(player.getX() >=62))){
                 scoreCounter.add(10);
                 addScore = true;
@@ -65,27 +87,29 @@ public class SkyscraperWorld extends World {
                 addScore = true;
         } 
         
-        if((currentLevel == 6)&&(addScore == false)&&((player.getY() <= 9)&&(player.getX() <=15))){
+        if((currentLevel == 5)&&(addScore == false)&&((player.getY() <= 9)&&(player.getX() <=15))){
                 scoreCounter.add(10);
                 addScore = true;
         } 
         
         if (checkLevelComplete())
         {
-            // If level is complete, call purge() to remove all objects
-            purge();
-            // Increase level
+            destroyWorld();
             currentLevel++;
-            // Set level clear goal
             levelCompletePoints = loadLevel(currentLevel);
         }
-        // Crude way to "win" the game
-        else if (currentLevel == WINNING_LEVEL)
+        if (currentLevel == WINNING_LEVEL)
         {
-            winGame();
+         scoreCounter.add(time.getTimeScore());
+            doTime = true;
         }
-        // Increment counter
-        timeCount++;
+        
+        if(doTime == true){
+            timeActs++;
+            if(timeActs == 250){
+                winGame();
+            }
+        }
     }
 
     public boolean checkLevelComplete()
@@ -101,10 +125,10 @@ public class SkyscraperWorld extends World {
     }
     
     public void winGame() {
-        Greenfoot.setWorld(new GameOverWorld(Game.SKYSCRAPER_GAME, scoreCounter.getValue()));
+       Greenfoot.setWorld(new GameOverWorld(Game.SKYSCRAPER_GAME, scoreCounter.getValue()));
     }
     
-    public void purge()
+    public void destroyWorld()
     {
         if (Ground != null)
         {
@@ -149,7 +173,6 @@ public class SkyscraperWorld extends World {
             }
         }
         removeObject(player);
-        
         movingWater.setLevel(20);
     }
 
@@ -158,30 +181,30 @@ public class SkyscraperWorld extends World {
         if (lvl == 1)
         {
             addScore = false;
-            Ground = new Ground[15];
-            MovingBricksRight = new MovingBrickRight[2];
-            Bricks = new Brick[30];
-            Coins = new Coin[4];
+            Ground = new SkyscraperGround[15];
+            MovingBricksRight = new SkyscraperMovingBrickRight[2];
+            Bricks = new SkyscraperBrick[30];
+            Coins = new SkyscraperCoin[4];
             
             //MovingBricks distance's
-            MovingBricksRight[0] = new MovingBrickRight(5, 36);
-            MovingBricksRight[1] = new MovingBrickRight(17, 58);
+            MovingBricksRight[0] = new SkyscraperMovingBrickRight(5, 36);
+            MovingBricksRight[1] = new SkyscraperMovingBrickRight(17, 58);
             
         
 
             for (int i = 0; i < Ground.length; i++)
             {
-                Ground[i] = new Ground ();
+                Ground[i] = new SkyscraperGround ();
             }   
             
             for (int i = 0; i < Bricks.length; i++)
             {
-                Bricks[i] = new Brick();
+                Bricks[i] = new SkyscraperBrick();
             }
             
             for (int i = 0; i < Coins.length; i++)
             {
-                Coins[i] = new Coin();
+                Coins[i] = new SkyscraperCoin();
             }
             
             //first floor
@@ -252,32 +275,32 @@ public class SkyscraperWorld extends World {
             addObject(Ground[14], 78, 11);
             
             addObject(player, 4, 65);
-
+            
             return 50;
         }
         
         if(lvl == 2){
             addScore = false;
-            Ground = new Ground[12];
-            MovingBricksRight = new MovingBrickRight[1];
-            MovingBricksLeft = new MovingBrickLeft[1];
-            MovingBricksUp = new MovingBrickUp[1];
-            Bricks = new Brick[47];
-            Coins = new Coin[4];
+            Ground = new SkyscraperGround[12];
+            MovingBricksRight = new SkyscraperMovingBrickRight[1];
+            MovingBricksLeft = new SkyscraperMovingBrickLeft[1];
+            MovingBricksUp = new SkyscraperMovingBrickUp[1];
+            Bricks = new SkyscraperBrick[47];
+            Coins = new SkyscraperCoin[4];
             
             for (int i = 0; i < Ground.length; i++)
             {
-                Ground[i] = new Ground ();
+                Ground[i] = new SkyscraperGround ();
             }   
             
             for (int i = 0; i < Bricks.length; i++)
             {
-                Bricks[i] = new Brick();
+                Bricks[i] = new SkyscraperBrick();
             }
             
             for (int i = 0; i < Coins.length; i++)
             {
-                Coins[i] = new Coin();
+                Coins[i] = new SkyscraperCoin();
             }
             
             //first floor
@@ -342,13 +365,13 @@ public class SkyscraperWorld extends World {
             addObject(Bricks[46], 75, 21);    
             
             //MovingBricks distance's
-            MovingBricksRight[0] = new MovingBrickRight(49, 79);
-            MovingBricksLeft[0] = new MovingBrickLeft(19, 48);
-            MovingBricksUp[0] = new MovingBrickUp(9, 21);
+            MovingBricksRight[0] = new SkyscraperMovingBrickRight(49, 79);
+            MovingBricksLeft[0] = new SkyscraperMovingBrickLeft(19, 48);
+            MovingBricksUp[0] = new SkyscraperMovingBrickUp(9, 21);
             
             //MovingBricks locations
             addObject(MovingBricksRight[0], 49, 6);
-            addObject(MovingBricksLeft[0], 48, 6);
+            addObject(MovingBricksLeft[0], 48, 10);
             addObject(MovingBricksUp[0], 79, 15);
             
             //Coins
@@ -373,25 +396,25 @@ public class SkyscraperWorld extends World {
         
         if (lvl == 3) {
             addScore = false;
-            Ground = new Ground[12];
-            MovingBricksRight = new MovingBrickRight[7];
-            MovingBricksLeft = new MovingBrickLeft[7];
-            Bricks = new Brick[6];
-            Coins = new Coin[4];
+            Ground = new SkyscraperGround[12];
+            MovingBricksRight = new SkyscraperMovingBrickRight[7];
+            MovingBricksLeft = new SkyscraperMovingBrickLeft[7];
+            Bricks = new SkyscraperBrick[6];
+            Coins = new SkyscraperCoin[4];
 
             for (int i = 0; i < Ground.length; i++)
             {
-                Ground[i] = new Ground ();
+                Ground[i] = new SkyscraperGround ();
             }   
             
             for (int i = 0; i < Coins.length; i++)
             {
-                Coins[i] = new Coin();
+                Coins[i] = new SkyscraperCoin();
             }
             
             for (int i = 0; i < Bricks.length; i++)
             {
-                Bricks[i] = new Brick();
+                Bricks[i] = new SkyscraperBrick();
             }
             
             
@@ -412,22 +435,22 @@ public class SkyscraperWorld extends World {
             addObject(Bricks[4], 23, 61);
             addObject(Bricks[5], 23, 57);
             
-            //MovingBricks distance's
-            MovingBricksRight[0] = new MovingBrickRight(22, 79);
-            MovingBricksRight[1] = new MovingBrickRight(22, 79);
-            MovingBricksRight[2] = new MovingBrickRight(22, 79);
-            MovingBricksRight[3] = new MovingBrickRight(22, 79);
-            MovingBricksRight[4] = new MovingBrickRight(22, 79);
-            MovingBricksRight[5] = new MovingBrickRight(22, 79);
-            MovingBricksRight[6] = new MovingBrickRight(22, 79);
+            //MovingBricks distances
+            MovingBricksRight[0] = new SkyscraperMovingBrickRight(22, 79);
+            MovingBricksRight[1] = new SkyscraperMovingBrickRight(22, 79);
+            MovingBricksRight[2] = new SkyscraperMovingBrickRight(22, 79);
+            MovingBricksRight[3] = new SkyscraperMovingBrickRight(22, 79);
+            MovingBricksRight[4] = new SkyscraperMovingBrickRight(22, 79);
+            MovingBricksRight[5] = new SkyscraperMovingBrickRight(22, 79);
+            MovingBricksRight[6] = new SkyscraperMovingBrickRight(22, 79);
            
-            MovingBricksLeft[0] = new MovingBrickLeft(22, 79);
-            MovingBricksLeft[1] = new MovingBrickLeft(22, 79);
-            MovingBricksLeft[2] = new MovingBrickLeft(22, 79);
-            MovingBricksLeft[3] = new MovingBrickLeft(22, 79);
-            MovingBricksLeft[4] = new MovingBrickLeft(22, 79);
-            MovingBricksLeft[5] = new MovingBrickLeft(22, 79);
-            MovingBricksLeft[6] = new MovingBrickLeft(22, 79);
+            MovingBricksLeft[0] = new SkyscraperMovingBrickLeft(22, 79);
+            MovingBricksLeft[1] = new SkyscraperMovingBrickLeft(22, 79);
+            MovingBricksLeft[2] = new SkyscraperMovingBrickLeft(22, 79);
+            MovingBricksLeft[3] = new SkyscraperMovingBrickLeft(22, 79);
+            MovingBricksLeft[4] = new SkyscraperMovingBrickLeft(22, 79);
+            MovingBricksLeft[5] = new SkyscraperMovingBrickLeft(22, 79);
+            MovingBricksLeft[6] = new SkyscraperMovingBrickLeft(22, 79);
             
             //MovingBricks locations
             addObject(MovingBricksRight[0], 50, 61);
@@ -447,10 +470,10 @@ public class SkyscraperWorld extends World {
             addObject(MovingBricksLeft[6], 50, 17);
             
             //Coins
-            addObject(Coins[0], 50, 21);
-            addObject(Coins[1], 50, 33);
-            addObject(Coins[2], 50, 41);
-            addObject(Coins[3], 50, 53);
+            addObject(Coins[0], 15, 1);
+            addObject(Coins[1], 11, 1);
+            addObject(Coins[2], 7, 1);
+            addObject(Coins[3], 3, 1);
             
             //Finish
             addObject(Ground[7], 15, 6);
@@ -466,24 +489,24 @@ public class SkyscraperWorld extends World {
         
         if (lvl == 4) {
             addScore = false;
-            Ground = new Ground[12];
-            MovingBricksUp = new MovingBrickUp[5];
-            Bricks = new Brick[4];
-            Coins = new Coin[4];
+            Ground = new SkyscraperGround[12];
+            MovingBricksUp = new SkyscraperMovingBrickUp[5];
+            Bricks = new SkyscraperBrick[4];
+            Coins = new SkyscraperCoin[4];
 
             for (int i = 0; i < Ground.length; i++)
             {
-                Ground[i] = new Ground ();
+                Ground[i] = new SkyscraperGround ();
             }   
             
             for (int i = 0; i < Coins.length; i++)
             {
-                Coins[i] = new Coin();
+                Coins[i] = new SkyscraperCoin();
             }
             
             for (int i = 0; i < Bricks.length; i++)
             {
-                Bricks[i] = new Brick();
+                Bricks[i] = new SkyscraperBrick();
             }
             
             
@@ -503,11 +526,11 @@ public class SkyscraperWorld extends World {
             addObject(Bricks[3], 23, 12);
             
             //MovingBricks distance's
-            MovingBricksUp[0] = new MovingBrickUp(12, 69);
-            MovingBricksUp[1] = new MovingBrickUp(1, 33);
-            MovingBricksUp[2] = new MovingBrickUp(1, 33);
-            MovingBricksUp[3] = new MovingBrickUp(1, 33);
-            MovingBricksUp[4] = new MovingBrickUp(1, 33);
+            MovingBricksUp[0] = new SkyscraperMovingBrickUp(12, 69);
+            MovingBricksUp[1] = new SkyscraperMovingBrickUp(1, 33);
+            MovingBricksUp[2] = new SkyscraperMovingBrickUp(1, 33);
+            MovingBricksUp[3] = new SkyscraperMovingBrickUp(1, 33);
+            MovingBricksUp[4] = new SkyscraperMovingBrickUp(1, 33);
             
             //MovingBricks locations
             addObject(MovingBricksUp[0], 7, 65);
@@ -536,26 +559,26 @@ public class SkyscraperWorld extends World {
         
         if (lvl == 5) {
             addScore = false;
-            Ground = new Ground[13];
-            MovingBricksLeft = new MovingBrickLeft[4];
-            MovingBricksRight = new MovingBrickRight[3];
-            MovingBricksUp = new MovingBrickUp[5];
-            Bricks = new Brick[2];
-            Coins = new Coin[4];
+            Ground = new SkyscraperGround[13];
+            MovingBricksLeft = new SkyscraperMovingBrickLeft[4];
+            MovingBricksRight = new SkyscraperMovingBrickRight[3];
+            MovingBricksUp = new SkyscraperMovingBrickUp[5];
+            Bricks = new SkyscraperBrick[2];
+            Coins = new SkyscraperCoin[4];
 
             for (int i = 0; i < Ground.length; i++)
             {
-                Ground[i] = new Ground ();
+                Ground[i] = new SkyscraperGround ();
             }   
             
             for (int i = 0; i < Coins.length; i++)
             {
-                Coins[i] = new Coin();
+                Coins[i] = new SkyscraperCoin();
             }
             
             for (int i = 0; i < Bricks.length; i++)
             {
-                Bricks[i] = new Brick();
+                Bricks[i] = new SkyscraperBrick();
             }
             
             
@@ -572,21 +595,21 @@ public class SkyscraperWorld extends World {
             addObject(Bricks[0], 35, 9);
             addObject(Bricks[1], 27, 9);
 
-            //MovingBricks distance's           
-            MovingBricksLeft[0] = new MovingBrickLeft(0, 78);
-            MovingBricksLeft[1] = new MovingBrickLeft(0, 78);
-            MovingBricksLeft[2] = new MovingBrickLeft(0, 78);
-            MovingBricksLeft[3] = new MovingBrickLeft(0, 78);
+            //MovingBricks distances          
+            MovingBricksLeft[0] = new SkyscraperMovingBrickLeft(0, 78);
+            MovingBricksLeft[1] = new SkyscraperMovingBrickLeft(0, 78);
+            MovingBricksLeft[2] = new SkyscraperMovingBrickLeft(0, 78);
+            MovingBricksLeft[3] = new SkyscraperMovingBrickLeft(0, 78);
             
-            MovingBricksRight[0] = new MovingBrickRight(0, 78);
-            MovingBricksRight[1] = new MovingBrickRight(0, 78);
-            MovingBricksRight[2] = new MovingBrickRight(0, 78);
+            MovingBricksRight[0] = new SkyscraperMovingBrickRight(0, 78);
+            MovingBricksRight[1] = new SkyscraperMovingBrickRight(0, 78);
+            MovingBricksRight[2] = new SkyscraperMovingBrickRight(0, 78);
             
-            MovingBricksUp[0] = new MovingBrickUp(9, 37);
-            MovingBricksUp[1] = new MovingBrickUp(9, 37);
-            MovingBricksUp[2] = new MovingBrickUp(9, 37);
-            MovingBricksUp[3] = new MovingBrickUp(9, 37);
-            MovingBricksUp[4] = new MovingBrickUp(9, 37);
+            MovingBricksUp[0] = new SkyscraperMovingBrickUp(9, 37);
+            MovingBricksUp[1] = new SkyscraperMovingBrickUp(9, 37);
+            MovingBricksUp[2] = new SkyscraperMovingBrickUp(9, 37);
+            MovingBricksUp[3] = new SkyscraperMovingBrickUp(9, 37);
+            MovingBricksUp[4] = new SkyscraperMovingBrickUp(9, 37);
             
             //MovingBricks locations
             addObject(MovingBricksLeft[0], 19, 61);
@@ -623,18 +646,64 @@ public class SkyscraperWorld extends World {
             addObject(player, 4, 65);
             return 250;
         }
+        if (lvl == 6) {
+            setBackground("gameOver_game4.png");
+            movingWater.setLevel(1);
+        }
         return 0;
+    }
+    
+    public void loseLife() {
+        if((lostLife == false)&&(isLoaded == true)){
+        countLifes--;
+        }
+        if ((countLifes == 2)&&(lostLife == false)) 
+        {
+           removeObject(lifes[0]);
+           lostLife = true;
+           destroyWorld();
+           loadLevel(currentLevel);
+           isLoaded = false;
+           
+           if((lostLife == true)&&(isLoaded == false)){
+            lostLife = false;
+            isLoaded = true;
+        }
+        }
+       
+        else if ((countLifes == 1)&&(lostLife == false)) 
+        {
+            removeObject(lifes[1]);
+            lostLife = true;
+            destroyWorld();
+            loadLevel(currentLevel);
+            isLoaded = false;
+            
+            if((lostLife == true)&&(isLoaded == false)){
+            lostLife = false;
+            isLoaded = true;
+        }
+        }
+        
+        else if ((countLifes == 0)&&(lostLife == false)) 
+        {
+            // Game Over
+            removeObject(lifes[2]);
+            lostLife = true;
+            destroyWorld();
+            gameOver();
+        }
     }
     
     public int getWaterLevel() {
         return movingWater.getLevel();
     }
     
-    public Counter getScoreCounter() {
+    public SkyscraperCounter getScoreCounter() {
         return scoreCounter;
     }
 
-    public Player getPlayer() {
+    public SkyscraperPlayer getPlayer() {
         return player;
     }
 }

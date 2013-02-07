@@ -62,8 +62,7 @@ public class SkyscraperPlayer extends Actor {
         
         int waterOffset = 70 - ((SkyscraperWorld)getWorld()).getWaterLevel() / 2 / 10;
         if (waterOffset <= getY()) {
-             setRotation(90);
-            ((SkyscraperWorld)getWorld()).gameOver();
+             ((SkyscraperWorld)getWorld()).loseLife();
             return;
         }
 
@@ -71,7 +70,9 @@ public class SkyscraperPlayer extends Actor {
         
         Actor coin = getOneIntersectingObject(SkyscraperCoin.class);
         if (coin != null) {
-            Greenfoot.playSound("Coin.wav");
+            GreenfootSound coinSound = new GreenfootSound("Coin.wav");
+            coinSound.setVolume(75); 
+            coinSound.play();
             getWorld().removeObject(coin);
             ((SkyscraperWorld)getWorld()).getScoreCounter().add(10);
         } 
@@ -99,7 +100,7 @@ public class SkyscraperPlayer extends Actor {
         boolean moveUp = false;
         Actor obj = null;
         for (int i = 1; i <= 4; ++i) {
-            obj = getOneObjectAtOffset(0, i, Surface.class);
+            obj = getOneObjectAtOffset(0, i, SkyscraperSurface.class);
             if (obj != null) {
                 moveUp = true;
                 break;
@@ -123,34 +124,34 @@ public class SkyscraperPlayer extends Actor {
     
     public boolean onGround()
     {
-         return getOneObjectAtOffset(-1, 4, Surface.class) != null
-             || getOneObjectAtOffset(0, 4, Surface.class) != null
-             || getOneObjectAtOffset(1, 4, Surface.class) != null;
+         return getOneObjectAtOffset(-1, 4, SkyscraperSurface.class) != null
+             || getOneObjectAtOffset(0, 4, SkyscraperSurface.class) != null
+             || getOneObjectAtOffset(1, 4, SkyscraperSurface.class) != null;
     }
     
     public void onTouchMovingBrick(){
         Actor actor = null;
-        boolean unused = (actor = getOneObjectAtOffset(-1, 4, MovingBrickLeft.class))!= null 
-        || (actor = getOneObjectAtOffset(0, 4, MovingBrickLeft.class))!= null
-        || (actor = getOneObjectAtOffset(1, 4, MovingBrickLeft.class))!= null;
+        boolean unused = (actor = getOneObjectAtOffset(-1, 4, SkyscraperMovingBrickLeft.class))!= null 
+        || (actor = getOneObjectAtOffset(0, 4, SkyscraperMovingBrickLeft.class))!= null
+        || (actor = getOneObjectAtOffset(1, 4, SkyscraperMovingBrickLeft.class))!= null;
         if(actor != null) {
-            setLocation(getX() + ((MovingBrickLeft)actor).getMovingBrickLeftSpeed(), getY()); 
+            setLocation(getX() + ((SkyscraperMovingBrickLeft)actor).getMovingBrickLeftSpeed(), getY()); 
         }
         
         Actor actor2 = null;
-        boolean unused2 = (actor2 = getOneObjectAtOffset(-1, 4, MovingBrickRight.class))!= null 
-        || (actor2 = getOneObjectAtOffset(0, 4, MovingBrickRight.class))!= null
-        || (actor2 = getOneObjectAtOffset(1, 4, MovingBrickRight.class))!= null;
+        boolean unused2 = (actor2 = getOneObjectAtOffset(-1, 4, SkyscraperMovingBrickRight.class))!= null 
+        || (actor2 = getOneObjectAtOffset(0, 4, SkyscraperMovingBrickRight.class))!= null
+        || (actor2 = getOneObjectAtOffset(1, 4, SkyscraperMovingBrickRight.class))!= null;
         if(actor2 != null) {
-            setLocation(getX() + ((MovingBrickRight)actor2).getMovingBrickRightSpeed(), getY()); 
+            setLocation(getX() + ((SkyscraperMovingBrickRight)actor2).getMovingBrickRightSpeed(), getY()); 
         }
         
         Actor actor3 = null;
-        boolean unused3 = (actor3 = getOneObjectAtOffset(-1, 4, MovingBrickUp.class))!= null 
-        || (actor3 = getOneObjectAtOffset(0, 4, MovingBrickUp.class))!= null
-        || (actor3 = getOneObjectAtOffset(1, 4, MovingBrickUp.class))!= null;
+        boolean unused3 = (actor3 = getOneObjectAtOffset(-1, 4, SkyscraperMovingBrickUp.class))!= null 
+        || (actor3 = getOneObjectAtOffset(0, 4, SkyscraperMovingBrickUp.class))!= null
+        || (actor3 = getOneObjectAtOffset(1, 4, SkyscraperMovingBrickUp.class))!= null;
         if(actor3 != null) {
-            setLocation(getX(), getY() + ((MovingBrickUp)actor3).getMovingBrickUpSpeed()); 
+            setLocation(getX(), getY() + ((SkyscraperMovingBrickUp)actor3).getMovingBrickUpSpeed()); 
         }
     }
     
