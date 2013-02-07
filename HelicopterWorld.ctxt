@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.params=
+comment0.target=HelicopterWorld()
+comment1.params=
+comment1.target=void\ act()
+comment2.params=
+comment2.target=int\ getWaterLevel()
+comment3.params=x
+comment3.target=void\ addScore(int)
+comment4.params=
+comment4.target=void\ lostLife()
+comment5.params=
+comment5.target=void\ lostLifeRope()
+comment6.params=
+comment6.target=void\ gameOver()
+numComments=7

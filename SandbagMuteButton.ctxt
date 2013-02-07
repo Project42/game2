@@ -1,0 +1,18 @@
+#BlueJ class context
+comment0.params=
+comment0.target=SandbagMuteButton()
+comment1.params=
+comment1.target=void\ act()
+comment2.params=sound
+comment2.target=void\ registerSound(greenfoot.GreenfootSound)
+comment3.params=sound
+comment3.target=void\ unregisterSound(greenfoot.GreenfootSound)
+comment4.params=
+comment4.target=boolean\ isMuted()
+comment5.params=
+comment5.target=void\ toggleMute()
+comment6.params=
+comment6.target=void\ mute()
+comment7.params=
+comment7.target=void\ unmute()
+numComments=8

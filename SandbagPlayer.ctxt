@@ -1,0 +1,22 @@
+#BlueJ class context
+comment0.params=speed
+comment0.target=SandbagPlayer(int)
+comment1.params=type
+comment1.target=SandbagPlayer\ createPlayer(SandbagPlayer.PlayerType)
+comment2.params=
+comment2.target=void\ act()
+comment3.params=dx\ dy
+comment3.target=void\ move(int,\ int)
+comment4.params=bag
+comment4.target=void\ carryBag(SandbagBag)
+comment5.params=type
+comment5.target=void\ setBagType(SandbagBag.BagType)
+comment6.params=
+comment6.target=void\ switchImageLeft()
+comment7.params=
+comment7.target=void\ switchImageRight()
+comment8.params=
+comment8.target=void\ switchImageStraight()
+comment9.params=
+comment9.target=void\ switchImageBack()
+numComments=10

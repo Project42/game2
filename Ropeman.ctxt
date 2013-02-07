@@ -1,0 +1,14 @@
+#BlueJ class context
+comment0.params=
+comment0.target=Ropeman()
+comment1.params=world
+comment1.target=void\ addedToWorld(greenfoot.World)
+comment2.params=
+comment2.target=void\ act()
+comment3.params=r
+comment3.target=void\ setRadius(int)
+comment4.params=
+comment4.target=int\ getRadius()
+comment5.params=
+comment5.target=void\ resetRopeman()
+numComments=6

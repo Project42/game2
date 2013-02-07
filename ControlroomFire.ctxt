@@ -1,0 +1,12 @@
+#BlueJ class context
+comment0.params=world
+comment0.target=void\ addedToWorld(greenfoot.World)
+comment1.params=
+comment1.target=void\ act()
+comment2.params=
+comment2.target=void\ checkClicked()
+comment2.text=\ Check\ if\ object\ has\ been\ clicked\n\ If\ true,\ it\ checks\ whether\ the\ last\ object\ clicked\ was\ a\ Firefighter\n\ If\ true,\ it\ deletes\ the\ Fire\ object\ and\ adds\ 50\ to\ score\n
+comment3.params=difficulty
+comment3.target=void\ checkIfIExpire(int)
+comment3.text=\ Check\ whether\ object\ has\ been\ in\ the\ world\ for\ too\ long\n\ If\ true,\ removes\ the\ Fire\ object\ and\ sets\ the\ timer\ back\ to\ 0\n\ Difficulty\ argument\ decreases\ when\ progressing\ in\ the\ game,\ making\ objects\ expire\ faster\n
+numComments=4

@@ -1,0 +1,6 @@
+#BlueJ class context
+comment0.params=helicopter
+comment0.target=void\ apply(Helicopter)
+comment1.params=helicopter
+comment1.target=void\ remove(Helicopter)
+numComments=2

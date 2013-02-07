@@ -1,0 +1,14 @@
+#BlueJ class context
+comment0.params=type
+comment0.target=SandbagBag\ createBag(SandbagBag.BagType)
+comment1.params=weight\ lifetime
+comment1.target=SandbagBag(int,\ int)
+comment2.params=
+comment2.target=void\ act()
+comment3.params=
+comment3.target=int\ getCost()
+comment4.params=
+comment4.target=int\ getWeight()
+comment5.params=
+comment5.target=SandbagBag.BagType\ getType()
+numComments=6

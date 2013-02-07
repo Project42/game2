@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.params=
+comment0.target=ControlroomConsole()
+comment1.params=message
+comment1.target=void\ addMessage(java.lang.String)
+comment2.params=
+comment2.target=greenfoot.GreenfootImage\ renderToImage()
+numComments=3

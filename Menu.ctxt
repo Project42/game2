@@ -1,0 +1,5 @@
+#BlueJ class context
+comment0.params=character
+comment0.target=void\ checkClicked(int)
+comment0.text=Checks\ if\ object\ has\ been\ clicked\ or\ pressed
+numComments=1
